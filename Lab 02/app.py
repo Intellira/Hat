@@ -1,6 +1,18 @@
+import pickle
+import numpy as np
+from typing import List
 from fastapi import FastAPI
+from pydantic import BaseModel, conlist
 
 app = FastAPI(title="Belajar Model Inference", version="1.0.1")
+
+class IrisClass(BaseModel):
+  """
+  Iris Dataset Class
+
+  Conlist ?
+  """
+  irisBatches : List[]
 
 @app.on_event("startup")
 def load_clf():
