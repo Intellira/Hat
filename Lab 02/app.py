@@ -8,9 +8,7 @@ def load_clf():
   Automatically Load Pickle Model
   """
   with open('model.pkl', 'rb') as rfile:
-
     global model
-    
     model = pickle.load(rfile)
 
 @app.get("/")
