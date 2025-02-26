@@ -7,11 +7,9 @@ def load_clf():
   """
   Automatically Load Pickle Model
   """
-  with open('model.pkl', 'rb') as rfile:
-
+  with open('model.pkl', 'rb') as file:
     global model
-    
-    model = pickle.load(rfile)
+    model = pickle.load(file)
 
 @app.get("/")
 async def MainFile():
