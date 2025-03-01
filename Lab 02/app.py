@@ -1,13 +1,14 @@
 import pickle
 import numpy as np
 from fastapi import FastAPI
+from typing import List
 from pydantic import BaseModel, conlist
 
 app = FastAPI(title="Belajar Model Inference Batches", version="1.0.1")
 
 @app.on_event('startup')
 def ModelOnCall():
-  url = 'iris_rf_classifier.pkl'
+  url = '../Lab 01/iris_classifier.pkl'
   with open(url, 'rb') as ModelFile:
     global model
     model = pickle.load(ModelFile)
@@ -18,7 +19,7 @@ class IrisClass(BaseModel):
   """
   Iris Class Base Model
   """
-  batches : List[conlist(item_type=float, min_items=4, max_items=4)]
+  batches : List[conlist(item_type=float, min_length=4, max_length=4)]
 
 @app.get("/")
 async def MainRoute():
