@@ -3,32 +3,36 @@ import numpy as np
 from fastapi import FastAPI
 from pydantic import BaseModel
 
-app = FastAPI(title="Belajar Model Inference", version="1.0.0")
+app = FastAPI(title="Belajar Model Inference")
+
+@app.on_event('startup')
+def ModelOnCall():
+  url = 'iris_classifier.pkl'
+  with open(url, 'rb') as ModelFile:
+    global model
+    model = pickle.load(ModelFile)
+
+labels = ['Setosa', 'Versicolor', 'Virginica']
 
 class IrisClass(BaseModel):
-  """
-  Iris Dataset Class
-  """
-  petal: float
-  petal: float
-  petal: float
-  petal: float
-
-@app.on_event("startup")
-def load_clf():
-  """
-  Automatically Load Pickle Model
-  """
-  with open('model.pkl', 'rb') as file:
-    global model
-    model = pickle.load(file)
+  sepal_length : float
+  sepal_width : float
+  petal_length : float
+  petal_width : float
 
 @app.get("/")
-async def MainFile():
+async def MainRoute():
   """
-  Main Router
+  Main Route
   """
-  return {"result":"Simple Model Inference on FastAPI"}
+  return {"result" : "Simple Model Inference Batches"}
 
-@app.post("/logits")
-async def GetResult()
+@app.post('/logits')
+async def GetResult(iris : IrisClass):
+  """
+  Get Model Result
+  """
+  irises = np.array([[iris.sepal_length, iris.sepal_width, iris.petal_length, iris.petal_width]])
+  logits = model.predict(irises).tolist()
+  result = labels[logits[0]]
+  return {"result" : result}
